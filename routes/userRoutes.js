@@ -9,14 +9,14 @@ const auth = require('../middleware/auth');
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 
-// Protected routes (require authentication)
-router.post('/users', auth, userController.addUser);
-router.put('/users/:id', auth, userController.updateUser);
-router.delete('/users/:id', auth, userController.deleteUser);
+// Protected user routes (require authentication)
+router.post('/', auth, userController.addUser);
+router.put('/:id', auth, userController.updateUser);
+router.delete('/:id', auth, userController.deleteUser);
 
-// Error handling for invalid routes
+// Error handling for invalid user routes
 router.use((req, res) => {
-    res.status(404).json({ message: 'Route not found' });
+    res.status(404).json({ message: 'User route not found' });
 });
 
 module.exports = router;
