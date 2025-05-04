@@ -9,13 +9,27 @@ const userRoutes = require('./routes/userRoutes');
 app.use(cors());
 app.use(express.json());
 
+// Logging middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
 // Routes
 app.use('/api', userRoutes);
 
-// Error handling middleware
+// 404 handler for unmatched routes
+app.use((req, res) => {
+    res.status(404).json({ message: 'API endpoint not found' });
+});
+
+// Global error handler
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
+    res.status(500).json({ 
+        message: 'Internal server error',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
 });
 
 const PORT = process.env.PORT || 3000;
